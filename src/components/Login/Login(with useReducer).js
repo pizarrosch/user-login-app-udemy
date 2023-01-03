@@ -5,10 +5,10 @@ import Button from "../UI/Button/Button";
 
 const emailReducer = (state, action) => {
   if(action.type === 'USER_INPUT') {
-    return {value: action.val, isValid: action.val.includes('@')};
+    return {value: action.val, isValid: action.val.trim().includes('@')};
   }
   if(action.type === 'INPUT_BLUR') {
-    return {value: state.value, isValid: state.value.includes('@')};
+    return {value: state.value, isValid: state.value.trim().includes('@')};
   }
   return {value: '', isValid: false};
 };
@@ -24,8 +24,6 @@ const passwordReducer = (state, action) => {
 }
 
 const Login = (props) => {
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
