@@ -1,4 +1,4 @@
-import {useState, useReducer} from "react";
+import {useState, useReducer, useEffect} from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
@@ -35,22 +35,32 @@ const Login = (props) => {
     isValid: false,
   });
 
+  // In case to avoid that the email or password input are checked
+  // after validation has ended as well, we use the object destructuring and
+  // create a variable to the 'isValid'-key
+  const {isValid: emailIsValid} = emailState;
+  const {isValid: passwordIsValid} = passwordState;
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('check typing');
+      setFormIsValid(
+        emailIsValid && passwordIsValid
+      );
+    }, 500);
+
+    return () => {
+      console.log('clean')
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passwordIsValid])
+
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', val: event.target.value});
-
-    setFormIsValid(
-      //while using useReducer hook 'emailState.value' is used instead of 'enteredEmail'
-      //as well as 'passwordState.value' instead of 'enteredPassword'
-      emailState.isValid && passwordState.isValid
-    );
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({type: 'USER_INPUT', val: event.target.value})
-
-    setFormIsValid(
-      emailState.isValid && passwordState.isValid
-    );
   };
 
   const validateEmailHandler = () => {
